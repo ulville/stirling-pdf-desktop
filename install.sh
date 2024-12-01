@@ -32,6 +32,7 @@ res="\$(curl -o /dev/null -s -w "%{http_code}\\n" \$URL)"
 if [ \$res -ne 200 ]; then
     $container_program run -d \\
         -p 5152:8080 \\
+        -v \$HOME/.local/share/trainingData:/usr/share/tessdata:Z \\
         docker.io/stirlingtools/stirling-pdf:latest &&
 
     while [ \$res -ne 200 ] && [ \$try -le 100 ]
