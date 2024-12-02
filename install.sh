@@ -49,18 +49,41 @@ EOF
 
 echo "-> Adding run script to $HOME/.local/bin/"
 echo "-> Make sure this directory is in your PATH"
+test -d "$HOME/.local/bin" || mkdir -d "$HOME/.local/bin"
+test -d "$HOME/.local/share/trainingData" || mkdir -d "$HOME/.local/share/trainingData"
 cp "/tmp/run-stirling-pdf.sh" "$HOME/.local/bin/run-stirling-pdf"
 chmod +x "$HOME/.local/bin/run-stirling-pdf"
 
 echo "-> Downloading icon from Stirling-PDF github repo"
-curl -o "/tmp/stirling-transparent.svg" https://raw.githubusercontent.com/Stirling-Tools/Stirling-PDF/main/docs/stirling-transparent.svg
+
+install_and_run_curl ()
+{
+    echo "-> Installing curl"
+    sudo $1 $2 curl &&
+    curl -o "/tmp/stirling-transparent.svg" https://raw.githubusercontent.com/Stirling-Tools/Stirling-PDF/main/docs/stirling-transparent.svg
+}
+
+if command -v curl >/dev/null 2>&1; then
+    curl -o "/tmp/stirling-transparent.svg" https://raw.githubusercontent.com/Stirling-Tools/Stirling-PDF/main/docs/stirling-transparent.svg
+elif command -v apt >/dev/null 2>&1; then
+    install_and_run_curl apt install
+elif command -v dnf >/dev/null 2>&1; then
+    install_and_run_curl dnf install
+elif command -v pacman >/dev/null 2>&1; then
+    install_and_run_curl pacman -S
+else
+    echo "-> !!! curl is not installed on the system. Please install curl and try again to have an icon !!!" && exit 2
+fi
 
 echo "-> Installing icon to user's icon directory"
+test -d "$HOME/.local/share/icons/hicolor/48x48/apps" || mkdir -d "$HOME/.local/share/icons/hicolor/48x48/apps"
+test -d "$HOME/.local/share/icons/hicolor/scalable/apps" || mkdir -d "$HOME/.local/share/icons/hicolor/scalable/apps"
 cp "/tmp/stirling-transparent.svg" "$HOME/.local/share/icons/hicolor/48x48/apps/"
 cp "/tmp/stirling-transparent.svg" "$HOME/.local/share/icons/hicolor/scalable/apps/"
 xdg-icon-resource forceupdate
 
 echo "-> Creating desktop menu entry"
+test -d "$HOME/.local/share/applications" || mkdir -d "$HOME/.local/share/applications"
 cat > "$HOME/.local/share/applications/stirling-pdf.desktop" <<EOF
 [Desktop Entry]
 Name=Stirling PDF
