@@ -47,8 +47,8 @@ EOF
 
 echo "-> Adding run script to $HOME/.local/bin/"
 echo "-> Make sure this directory is in your PATH"
-test -d "$HOME/.local/bin" || mkdir -d "$HOME/.local/bin"
-test -d "$HOME/.local/share/trainingData" || mkdir -d "$HOME/.local/share/trainingData"
+test -d "$HOME/.local/bin" || mkdir -p "$HOME/.local/bin"
+test -d "$HOME/.local/share/trainingData" || mkdir -p "$HOME/.local/share/trainingData"
 cp "/tmp/run-stirling-pdf.sh" "$HOME/.local/bin/run-stirling-pdf"
 chmod +x "$HOME/.local/bin/run-stirling-pdf"
 
@@ -74,14 +74,14 @@ else
 fi
 
 echo "-> Installing icon to user's icon directory"
-test -d "$HOME/.local/share/icons/hicolor/48x48/apps" || mkdir -d "$HOME/.local/share/icons/hicolor/48x48/apps"
-test -d "$HOME/.local/share/icons/hicolor/scalable/apps" || mkdir -d "$HOME/.local/share/icons/hicolor/scalable/apps"
+test -d "$HOME/.local/share/icons/hicolor/48x48/apps" || mkdir -p "$HOME/.local/share/icons/hicolor/48x48/apps"
+test -d "$HOME/.local/share/icons/hicolor/scalable/apps" || mkdir -p "$HOME/.local/share/icons/hicolor/scalable/apps"
 cp "/tmp/stirling-transparent.svg" "$HOME/.local/share/icons/hicolor/48x48/apps/"
 cp "/tmp/stirling-transparent.svg" "$HOME/.local/share/icons/hicolor/scalable/apps/"
 xdg-icon-resource forceupdate
 
 echo "-> Creating desktop menu entry"
-test -d "$HOME/.local/share/applications" || mkdir -d "$HOME/.local/share/applications"
+test -d "$HOME/.local/share/applications" || mkdir -p "$HOME/.local/share/applications"
 cat > "$HOME/.local/share/applications/stirling-pdf.desktop" <<EOF
 [Desktop Entry]
 Name=Stirling PDF
