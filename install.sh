@@ -5,14 +5,12 @@ if [ $EUID -eq 0 ]; then
     exit 1
 fi
 
-echo "-> Checking if docker or podman available"
+echo "-> Checking if podman available"
 
-if command -v docker >/dev/null 2>&1; then
-    container_program="docker"
-elif command -v podman >/dev/null 2>&1; then
+if command -v podman >/dev/null 2>&1; then
     container_program="podman"
 else
-    echo "This script requires docker or podman to be installed on the system. Please install one of them before running this installer."
+    echo "This script requires podman to be installed on the system. Please install if before running this installer."
     exit 1
 fi
 
