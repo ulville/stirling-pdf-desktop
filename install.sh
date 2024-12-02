@@ -46,11 +46,30 @@ xdg-open \$URL
 EOF
 
 echo "-> Adding run script to $HOME/.local/bin/"
-echo "-> Make sure this directory is in your PATH"
 test -d "$HOME/.local/bin" || mkdir -p "$HOME/.local/bin"
 test -d "$HOME/.local/share/trainingData" || mkdir -p "$HOME/.local/share/trainingData"
 cp "/tmp/run-stirling-pdf.sh" "$HOME/.local/bin/run-stirling-pdf"
 chmod +x "$HOME/.local/bin/run-stirling-pdf"
+
+add_to_path()
+{
+cat >> "$HOME/.bashrc" <<'EOF'
+
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+EOF
+}
+
+echo "-> Checking if PATH includes ~/.local/bin"
+if [[ ":$PATH:" == *":$HOME/.local/bin:"* ]]; then
+    echo "-> Your PATH is correctly set"
+else
+    echo "-> Your path is missing ~/.local/bin, you might want to add it."
+    read -p "-> Would you like to add it to your .bashrc file now? (y/N): " confirm && [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]] && add_to_path
+fi
 
 echo "-> Downloading icon from Stirling-PDF github repo"
 
